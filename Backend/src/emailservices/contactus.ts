@@ -24,13 +24,13 @@ let transporter = nodemailer.createTransport({
 });
 
 // Function to send email
-export async function sendLoginEmail(userEmail, userName, token) {
+export async function sendContactus(userEmail, userName, message) {
   let email = {
     body: {
-      name: userName,
-      intro: `Use this token for your verification <br><br><strong>${token}</strong>`,
+      name: 'Admin',
+      intro: `Dear Admin, Student ${userName} with email ${userEmail} has raised a issue. Here is the issue - ${message}`,
       // text: token,
-      outro: 'If you did not log in, please contact our support immediately.',
+      outro: 'Thankyou',
     },
   };
 
@@ -38,14 +38,14 @@ export async function sendLoginEmail(userEmail, userName, token) {
 
   let mailOptions = {
     from: process.env.EMAIL_ID,
-    to: userEmail,
-    subject: 'Login Notification',
+    to: process.env.EMAIL_ID,
+    subject: 'Student Query',
     html: emailBody,
   };
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log('Login email sent to %s', userEmail);
+    console.log('Login email sent to %s', process.env.EMAIL_ID);
   } catch (error) {
     console.error('Error sending login email:', error);
   }

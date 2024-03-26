@@ -4,6 +4,7 @@ import "tailwindcss/tailwind.css";
 import { gql, useQuery, useMutation } from "@apollo/client";
 import { GET_ADMIN_REQUESTS } from "../graphql/queries";
 import { APPROVE_REQUEST } from "../graphql/mutations";
+import Header from "./header";
 
 const AdminPage = () => {
   // Fetching email requests
@@ -51,4 +52,15 @@ const AdminPage = () => {
   );
 };
 
-export default AdminPage;
+const PageComponent: React.FC = () => {
+  return (
+    <div>
+      <Header />
+      <AdminPage />
+      {/* Rest of your page content */}
+    </div>
+  );
+};
+
+export default PageComponent;
+//export default AdminPage;

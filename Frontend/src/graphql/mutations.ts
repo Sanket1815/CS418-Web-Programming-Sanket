@@ -51,3 +51,39 @@ export const PASSWORD_RESET = gql`
     passwordReset(input: $input)
   }
 `;
+
+export const CREATE_COURSE = gql`
+  mutation createCourse($input: AddCourseParams!) {
+    createCourse(input: $input)
+  }
+`;
+
+export const UPDATE_COURSE = gql`
+  mutation updateCourse($input: UpdateCourseParams!) {
+    updateCourse(input: $input)
+  }
+`;
+
+export const ADD_ADVISORY_RECORD = gql`
+  mutation createUserAdvisoryRecord($input: AdvisoryRecordParams!) {
+    createUserAdvisoryRecord(input: $input)
+  }
+`;
+
+export const UPDATE_ADVISORY_RECORD = gql`
+  mutation updateUserAdvisoryStatus($input: UpdateStudentStatusParams!) {
+    updateUserAdvisoryStatus(input: $input)
+  }
+`;
+
+export const REMOVE_PREREQUISITE = gql`
+  mutation removePrerequisites($input: RemovePrerequisitesParams!) {
+    removePrerequisites(input: $input)
+  }
+`;
+
+export const CONTACT_US_MUTATION = gql`
+  mutation contactUs($input: ContactUsParams!) {
+    contactUs(input: $input)
+  }
+`;

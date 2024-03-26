@@ -1,6 +1,13 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
+import {
+  Entity,
+  PrimaryKey,
+  Property,
+  OneToMany,
+  Collection,
+} from '@mikro-orm/core';
 import { v4 as uuidv4 } from 'uuid';
 import { ObjectType } from '@nestjs/graphql';
+import { AdvisoryRecord } from '../course/advisoryRecord/advisoryRecords.entity';
 
 @Entity({ tableName: 'user' })
 @ObjectType()
@@ -44,6 +51,13 @@ export class User {
 
   @Property({ nullable: true })
   otp?: number;
+
+  // @ManyToOne(() => AdvisoryRecord, { nullable: true })
+  // advisoryRecord?: AdvisoryRecord;
+  @OneToMany(() => AdvisoryRecord, (advisoryRecord) => advisoryRecord.user, {
+    default: [],
+  })
+  advisoryRecords = new Collection<AdvisoryRecord>(this);
 
   constructor() {
     this.id = uuidv4();

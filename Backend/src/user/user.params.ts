@@ -2,6 +2,61 @@ import { InputType, Field, ID } from '@nestjs/graphql';
 import * as jf from 'joiful';
 
 @InputType()
+export class StudentCoursesParams {
+  @Field({ nullable: true })
+  level?: string;
+
+  @Field({ nullable: true })
+  courseName?: string;
+}
+
+@InputType()
+export class StudentPrequisitesParams {
+  @Field({ nullable: true })
+  level?: string;
+
+  @Field({ nullable: true })
+  courseName?: string;
+}
+
+@InputType()
+export class AdvisoryRecordParams {
+  @Field()
+  id!: string;
+
+  @Field({ nullable: true })
+  term!: string;
+
+  @Field({ nullable: true })
+  status?: string;
+
+  @Field({ nullable: true })
+  gpa?: string;
+
+  @Field({ nullable: true })
+  lastTerm!: string;
+
+  @Field(() => [StudentCoursesParams], { nullable: true })
+  courses?: Array<StudentCoursesParams>;
+
+  @Field(() => [StudentPrequisitesParams], { nullable: true })
+  prerequisites?: Array<StudentPrequisitesParams>;
+  //   @ManyToOne(() => User)
+  //   user?: User;
+  //   @ManyToOne(() => User)
+  //   user?: User;
+}
+
+@InputType()
+export class UserAddAdvisoryParams {
+  @Field({ nullable: false })
+  term?: string;
+
+  @Field({ nullable: false })
+  status?: string;
+}
+
+@InputType()
 export class UserAddParams {
   @Field(() => String)
   @jf.string().required()
@@ -26,6 +81,9 @@ export class UserAddParams {
 
   @Field(() => Boolean, { defaultValue: false })
   isAdmin: boolean;
+
+  @Field(() => [UserAddAdvisoryParams], { nullable: true, defaultValue: [] })
+  advisoryRecord?: UserAddAdvisoryParams[];
 }
 
 @InputType()
@@ -122,4 +180,33 @@ export class VerifyOtpParams {
   @Field(() => Number)
   @jf.number().required()
   otp!: number;
+}
+
+@InputType()
+export class UpdateUserAdvisoryRecord {
+  @Field(() => String)
+  @jf.string().required()
+  id!: string;
+
+  @Field(() => [AdvisoryRecordParams], { nullable: true, defaultValue: [] })
+  advisoryRecord?: AdvisoryRecordParams[];
+}
+
+@InputType()
+export class ContactUsParams {
+  @Field(() => String)
+  @jf.string().required()
+  email!: string;
+
+  @Field(() => String)
+  @jf.string().required()
+  firstName!: string;
+
+  @Field(() => String)
+  @jf.string().required()
+  lastName!: string;
+
+  @Field(() => String)
+  @jf.string().required()
+  message!: string;
 }

@@ -37,7 +37,7 @@ export async function sendOTPEmail(userEmail, userName, otp) {
   let emailBody = mailGenerator.generate(email);
 
   let mailOptions = {
-    from: 'nadkarnisanket15@gmail.com',
+    from: process.env.EMAIL_ID,
     to: userEmail,
     subject: 'Password change Notification',
     html: emailBody,

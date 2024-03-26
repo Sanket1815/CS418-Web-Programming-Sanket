@@ -3,13 +3,14 @@ import { AppService } from './app.service';
 import { MikroORM } from '@mikro-orm/core';
 import { Admin } from './admin/admin.entity';
 import { User } from './user/user.entity';
+import { Course } from './course/course.entity';
 
 let entityManager = null;
 
 export const getEntityManager = async () => {
   if (!entityManager) {
     const orm = await MikroORM.init({
-      entities: [User, Admin],
+      entities: [User, Admin, Course],
       dbName: 'nestjsreact',
       type: 'mysql',
       // ...other Mikro-ORM options

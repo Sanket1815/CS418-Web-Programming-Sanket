@@ -13,6 +13,7 @@ import { UserModule } from './user/user.module';
 import * as path from 'path';
 import { JwtModule } from '@nestjs/jwt';
 import { verifyToken } from './auth.service';
+import { CourseModule } from './course/course.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { verifyToken } from './auth.service';
     JwtModule.register({}),
     StudentModule,
     UserModule,
+    CourseModule,
   ],
   controllers: [AppController],
   providers: [AppService],

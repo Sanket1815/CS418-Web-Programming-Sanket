@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 //const jwt_decode = require("jwt-decode");
 //import * as jwtDecode from "jwt-decode";
 import { jwtDecode } from "jwt-decode";
-import * as jwt from "jsonwebtoken";
+import Header from "./header";
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -28,7 +28,7 @@ const VerifyPage = () => {
       const decoded = jwtDecode<TokenPayload>(gettoken!);
       // console.log("email", decoded.email);
       router.push({
-        pathname: "/profile",
+        pathname: "/home",
         query: { email: decoded.email },
       });
       // console.log("data", data);
@@ -83,4 +83,16 @@ const VerifyPage = () => {
   );
 };
 
-export default VerifyPage;
+const PageComponent: React.FC = () => {
+  return (
+    <div>
+      <Header />
+      <VerifyPage />
+      {/* Rest of your page content */}
+    </div>
+  );
+};
+
+export default PageComponent;
+
+//export default VerifyPage;

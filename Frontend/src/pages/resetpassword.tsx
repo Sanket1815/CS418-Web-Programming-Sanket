@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import { PASSWORD_RESET } from "../graphql/mutations";
+import Header from "./header";
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
@@ -100,4 +101,16 @@ const ResetPassword = () => {
   );
 };
 
-export default ResetPassword;
+const PageComponent: React.FC = () => {
+  return (
+    <div>
+      <Header />
+      <ResetPassword />
+      {/* Rest of your page content */}
+    </div>
+  );
+};
+
+export default PageComponent;
+
+//export default ResetPassword;

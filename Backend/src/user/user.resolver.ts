@@ -9,6 +9,7 @@ import {
   getuser,
   emailOTP,
   verifyOTP,
+  sendContactUsEmail,
 } from './user.service';
 import { UserType, LoginResponse } from './user.type';
 import {
@@ -20,6 +21,7 @@ import {
   GetSingleUserParams,
   EmailOTPParams,
   VerifyOtpParams,
+  ContactUsParams,
 } from './user.params';
 import { User } from './user.entity';
 import { EntityManager } from '@mikro-orm/core';
@@ -79,5 +81,10 @@ export class UserResolver {
   @Mutation(() => Boolean)
   async verifyOtp(@Args('input') input: VerifyOtpParams): Promise<Boolean> {
     return verifyOTP(input);
+  }
+
+  @Mutation(() => Boolean)
+  async contactUs(@Args('input') input: ContactUsParams): Promise<Boolean> {
+    return sendContactUsEmail(input);
   }
 }

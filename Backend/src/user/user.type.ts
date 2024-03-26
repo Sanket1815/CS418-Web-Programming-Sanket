@@ -1,4 +1,5 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
+import { AdvisoryRecordType } from '../course/advisoryRecord/advisoryRecord.type';
 
 @ObjectType()
 export class UserType {
@@ -37,6 +38,9 @@ export class UserType {
 
   @Field({ nullable: true })
   about?: string;
+
+  @Field(() => [AdvisoryRecordType], { nullable: true })
+  advisoryRecords!: AdvisoryRecordType[];
 }
 
 @ObjectType()

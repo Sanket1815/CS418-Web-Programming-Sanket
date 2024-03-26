@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { GETSINGLEUSER } from "../graphql/queries";
 import { UPDATEUSER_MUTATION } from "../graphql/mutations";
 import { useRouter } from "next/router";
-import Head from "next/head";
+import Header from "./header";
 
 const Profile = () => {
   const router = useRouter();
@@ -93,7 +93,7 @@ const Profile = () => {
 
   return (
     <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-      {isAdmin && (
+      {/* {isAdmin && (
         <div className="fixed top-0 left-0 right-0 z-50 flex justify-end p-4">
           <button
             onClick={goToAdminPage}
@@ -102,7 +102,7 @@ const Profile = () => {
             Admin
           </button>
         </div>
-      )}
+      )} */}
       <div className="relative z-20 h-35 md:h-65">
         {/* <Image
           src={"/images/cover/cover-01.png"}
@@ -532,4 +532,16 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+const PageComponent: React.FC = () => {
+  return (
+    <div>
+      <Header />
+      <Profile />
+      {/* Rest of your page content */}
+    </div>
+  );
+};
+
+export default PageComponent;
+
+//export default Profile;

@@ -8,13 +8,58 @@ interface SignUpData {
   name: string;
   email: string;
   password: string;
+  advisoryRecord: [];
 }
+
+const Header: React.FC = () => {
+  const router = useRouter();
+  console.log(`email`, router.query);
+  // const goToProfilePage = () => {
+  //   router.push({
+  //     pathname: "/profile",
+  //     query: { email: router.query.email },
+  //   });
+  // };
+
+  return (
+    <nav className="bg-gray-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          <div className="flex-shrink-0">
+            <img
+              className="h-8 w-8"
+              src="/assests/images/odulog.png"
+              alt="Your Logo"
+            />
+          </div>
+          {/* <div className="md:block">
+            <div className="ml-auto flex items-baseline space-x-4">
+              <button
+                onClick={goToProfilePage}
+                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Profile
+              </button>
+              <a
+                href="/adminpage"
+                className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+              >
+                Admin
+              </a>
+            </div>
+          </div> */}
+        </div>
+      </div>
+    </nav>
+  );
+};
 
 const Signup = () => {
   const [formData, setFormData] = useState<SignUpData>({
     name: "",
     email: "",
     password: "",
+    advisoryRecord: [],
   });
   const [signup, { data, loading, error }] = useMutation(SIGNUP_MUTATION);
   const [popupMessage, setPopupMessage] = useState("");
@@ -60,7 +105,7 @@ const Signup = () => {
   return (
     <div
       className="flex justify-center items-center h-screen bg-cover"
-      style={{ backgroundImage: "url('/assests/images/signup1.jpg')" }}
+      // style={{ backgroundImage: "url('/assests/images/signup1.jpg')" }}
     >
       <form
         onSubmit={handleSubmit}
@@ -155,4 +200,14 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+const PageComponent: React.FC = () => {
+  return (
+    <div>
+      <Header />
+      <Signup />
+      {/* Rest of your page content */}
+    </div>
+  );
+};
+
+export default PageComponent;

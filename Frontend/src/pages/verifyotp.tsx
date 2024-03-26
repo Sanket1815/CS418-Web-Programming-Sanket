@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import { VERIFYOTP } from "../graphql/mutations";
+import Header from "./header";
 
 const VerifyCode = () => {
   const [otp, setCode] = useState<number>();
@@ -75,4 +76,16 @@ const VerifyCode = () => {
   );
 };
 
-export default VerifyCode;
+const PageComponent: React.FC = () => {
+  return (
+    <div>
+      <Header />
+      <VerifyCode />
+      {/* Rest of your page content */}
+    </div>
+  );
+};
+
+export default PageComponent;
+
+//export default VerifyCode;

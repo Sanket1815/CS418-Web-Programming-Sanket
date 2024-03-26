@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 //import { Errors } from 'molecular';
+import { Collection } from '@mikro-orm/core';
 import { User } from './user.entity';
-import { InjectRepository } from '@mikro-orm/nestjs';
-import { EntityRepository, EntityManager, MikroORM } from '@mikro-orm/core';
 import {
   UserAddParams,
   UserUpdateParams,
@@ -12,6 +11,8 @@ import {
   GetSingleUserParams,
   EmailOTPParams,
   VerifyOtpParams,
+  UpdateUserAdvisoryRecord,
+  ContactUsParams,
 } from './user.params';
 import {
   createAdminRequest,
@@ -26,6 +27,8 @@ import { generateToken, TokenPayload, verifyToken } from '../auth.service';
 import { sendOTPEmail } from '../emailservices/emailotpPassword';
 import { sendLoginEmail } from '../emailservices/email.service';
 import { LoginResponse, UserType } from './user.type';
+import { AdvisoryRecord } from '../course/advisoryRecord/advisoryRecords.entity';
+import { sendContactus } from '../emailservices/contactus';
 
 export async function createUser(data: UserAddParams): Promise<String> {
   const em = await getEntityManager();
@@ -50,7 +53,23 @@ export async function createUser(data: UserAddParams): Promise<String> {
     users.password = hashPassword;
     users.address = data.address ? data.address : data.address;
     users.isAdmin = data.isAdmin ? data.isAdmin : users.isAdmin;
-    await em.persistAndFlush(users);
+    users.advisoryRecords = new Collection<AdvisoryRecord>(users);
+    if (data.advisoryRecord && data.advisoryRecord.length > 0) {
+      data.advisoryRecord.forEach((recordData) => {
+        const advisoryRecord = new AdvisoryRecord();
+        advisoryRecord.term = recordData.term;
+        advisoryRecord.status = recordData.status;
+        advisoryRecord.user = users;
+        users.advisoryRecords.add(advisoryRecord);
+      });
+    }
+    await em.persistAndFlush(users).then(async () => {
+      let inputData = {
+        email: data.email,
+        approve: false,
+      };
+      await createAdminRequest(inputData);
+    });
     response = 'User created Successfully';
     //console.log('response', response);
     //return response;
@@ -60,14 +79,98 @@ export async function createUser(data: UserAddParams): Promise<String> {
 
 export async function getUsers(): Promise<UserType[]> {
   const em = await getEntityManager();
-  const userList = await em.getRepository(User).find(User, {});
-  return userList;
+  const userList: UserType[] = await em
+    .getRepository(User)
+    .find(User, { populate: ['advisoryRecords'] });
+  const result = userList.map((user) => {
+    return {
+      id: user.id,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+      name: user.name,
+      lastName: user.lastName,
+      email: user.email,
+      mobileNumber: user.mobileNumber,
+      address: user.address,
+      otp: user.otp,
+      about: user.about,
+      password: user.password,
+      isAdmin: user.isAdmin,
+      advisoryRecords: user.advisoryRecords.map((x) => {
+        return {
+          id: x.id,
+          createdAt: x.createdAt,
+          updatedAt: x.updatedAt,
+          term: x.term,
+          lastTerm: x.lastTerm,
+          gpa: x.gpa,
+          status: x.status,
+          courses: x.courses.map((e) => {
+            return {
+              level: e.level,
+              courseName: e.courseName,
+            };
+          }),
+          prerequisites: x.prerequisites.map((e) => {
+            return {
+              level: e.level,
+              courseName: e.courseName,
+            };
+          }),
+        };
+      }),
+    };
+  });
+  return result;
 }
 
 export async function getuser(data: GetSingleUserParams): Promise<UserType> {
   const em = await getEntityManager();
-  const user = await em.getRepository(User).findOne({ email: data.email });
-  return user;
+  const user = await em.findOne(
+    User,
+    { email: data.email },
+    { populate: ['advisoryRecords'] },
+  );
+
+  const result: UserType = {
+    id: user.id,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+    name: user.name,
+    lastName: user.lastName,
+    email: user.email,
+    mobileNumber: user.mobileNumber,
+    address: user.address,
+    otp: user.otp,
+    about: user.about,
+    password: user.password,
+    isAdmin: user.isAdmin,
+    advisoryRecords: user.advisoryRecords.map((x) => {
+      return {
+        id: x.id,
+        createdAt: x.createdAt,
+        updatedAt: x.updatedAt,
+        term: x.term,
+        lastTerm: x.lastTerm,
+        gpa: x.gpa,
+        status: x.status,
+        courses: x.courses.map((e) => {
+          return {
+            level: e.level,
+            courseName: e.courseName,
+          };
+        }),
+        prerequisites: x.prerequisites.map((e) => {
+          return {
+            level: e.level,
+            courseName: e.courseName,
+          };
+        }),
+      };
+    }),
+  };
+  //console.log(`Users ${JSON.stringify(result)}`);
+  return result;
 }
 
 export async function updateUser(data: UserUpdateParams): Promise<boolean> {
@@ -114,7 +217,7 @@ export async function login(input: LoginParams): Promise<LoginResponse> {
         const token = await generateToken(payload);
         user.token = token;
         await em.persistAndFlush(user).then(async () => {
-          await deleteAdminRecord(user.email);
+          // await deleteAdminRecord(user.email);
           response = {
             message: 'Successfully LoggedIn',
             token: token ? token : null,
@@ -133,7 +236,7 @@ export async function login(input: LoginParams): Promise<LoginResponse> {
         user.token = token;
         await em.persistAndFlush(user).then(async () => {
           await sendLoginEmail(user.email, user.name, token);
-          await deleteAdminRecord(user.email);
+          //await deleteAdminRecord(user.email);
           response = {
             message: 'Successfully LoggedIn',
             token: token ? token : null,
@@ -250,6 +353,16 @@ export async function verifyOTP(data: VerifyOtpParams): Promise<boolean> {
   return false;
 }
 
+export async function sendContactUsEmail(
+  input: ContactUsParams,
+): Promise<boolean> {
+  const fullName = `${input.firstName} ${input.lastName}`;
+  if (input) {
+    await sendContactus(input.email, fullName, input.message);
+  }
+  return true;
+}
+
 @Injectable()
 export class UserService {
   async createUser(data: UserAddParams) {
@@ -285,5 +398,9 @@ export class UserService {
 
   async passwordReset(data: PasswordResetParams) {
     return passwordReset(data);
+  }
+
+  async contactusEmail(data: ContactUsParams) {
+    return sendContactUsEmail(data);
   }
 }

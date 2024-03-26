@@ -24,11 +24,11 @@ let transporter = nodemailer.createTransport({
 });
 
 // Function to send email
-export async function sendLoginEmail(userEmail, userName, token) {
+export async function sendStatusUpdate(userEmail, userName, term, status) {
   let email = {
     body: {
       name: userName,
-      intro: `Use this token for your verification <br><br><strong>${token}</strong>`,
+      intro: `Dear ${userName}, your coursework for semester ${term} has been ${status}`,
       // text: token,
       outro: 'If you did not log in, please contact our support immediately.',
     },
@@ -39,7 +39,7 @@ export async function sendLoginEmail(userEmail, userName, token) {
   let mailOptions = {
     from: process.env.EMAIL_ID,
     to: userEmail,
-    subject: 'Login Notification',
+    subject: 'Advisory Record Status Update',
     html: emailBody,
   };
 

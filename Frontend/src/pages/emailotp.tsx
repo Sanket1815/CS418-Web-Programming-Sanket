@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { SENDMAILOTP } from "../graphql/mutations";
 import { useRouter } from "next/router";
-import { GraphQLError } from "graphql";
+import Header from "./header";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -80,4 +80,16 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;
+const PageComponent: React.FC = () => {
+  return (
+    <div>
+      <Header />
+      <ForgotPassword />
+      {/* Rest of your page content */}
+    </div>
+  );
+};
+
+export default PageComponent;
+
+//export default ForgotPassword;
