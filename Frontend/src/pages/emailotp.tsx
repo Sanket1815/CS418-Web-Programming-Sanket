@@ -4,6 +4,7 @@ import { useMutation } from "@apollo/client";
 import { SENDMAILOTP } from "../graphql/mutations";
 import { useRouter } from "next/router";
 import Header from "./header";
+import Head from "next/head";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -30,6 +31,9 @@ const ForgotPassword = () => {
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
+      <Head>
+        <link rel="icon" href="/assests/images/odufavicon-new.ico" />
+      </Head>
       <div className="w-full max-w-md p-8 space-y-4 bg-white rounded-lg shadow-md">
         <h1 className="text-xl font-semibold text-center text-gray-700">
           Enter your Email

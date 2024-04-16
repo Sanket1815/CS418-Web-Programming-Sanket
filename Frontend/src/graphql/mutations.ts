@@ -87,3 +87,9 @@ export const CONTACT_US_MUTATION = gql`
     contactUs(input: $input)
   }
 `;
+
+export const VERIFY_RECAPTCHA = gql`
+  mutation verifyReCapacha($input: VerifyRecapchaParams!) {
+    verifyReCapacha(input: $input)
+  }
+`;

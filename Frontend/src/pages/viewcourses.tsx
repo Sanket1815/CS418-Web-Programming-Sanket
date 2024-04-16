@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import React from "react";
 import { GET_COURSES, GETSINGLEUSER } from "../graphql/queries";
+import Head from "next/head";
 
 const Header: React.FC = () => {
   return (
@@ -30,6 +31,9 @@ const ViewCourses: React.FC = () => {
 
   return (
     <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+      <Head>
+        <link rel="icon" href="/assests/images/odufavicon-new.ico" />
+      </Head>
       <div className="px-4 py-8 sm:px-0">
         <div className="mt-10">
           <h2 className="text-center text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">

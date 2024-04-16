@@ -4,6 +4,7 @@ import { UPDATE_COURSE, REMOVE_PREREQUISITE } from "../graphql/mutations";
 import { GET_COURSES, GET_COURSE } from "../graphql/queries";
 import { v4 as uuidv4 } from "uuid";
 import Header from "./header";
+import Head from "next/head";
 
 const UpdateCoursePage: React.FC<{ courseId?: string | null }> = ({
   courseId,
@@ -125,6 +126,9 @@ const UpdateCoursePage: React.FC<{ courseId?: string | null }> = ({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      <Head>
+        <link rel="icon" href="/assests/images/odufavicon-new.ico" />
+      </Head>
       {/* Existing Prerequisites */}
       {prerequisites
         .filter((prerequisite) =>

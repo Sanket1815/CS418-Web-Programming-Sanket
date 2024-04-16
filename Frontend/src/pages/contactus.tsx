@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useMutation, gql } from "@apollo/client";
 import Header from "./header";
 import { CONTACT_US_MUTATION } from "../graphql/mutations";
+import Head from "next/head";
 
 const ContactUs: React.FC = () => {
   const [firstName, setFirstName] = useState("");
@@ -36,6 +37,9 @@ const ContactUs: React.FC = () => {
 
   return (
     <div className="max-w-6xl mx-auto bg-white my-6 font-[sans-serif] text-[#011c2b]">
+      <Head>
+        <link rel="icon" href="/assests/images/odufavicon-new.ico" />
+      </Head>
       <div className="text-center px-6">
         <h2 className="text-3xl font-extrabold">Contact Us</h2>
         <p className="text-sm text-gray-400 mt-3">
@@ -66,7 +70,7 @@ const ContactUs: React.FC = () => {
                 <strong>portaluser1010@gmail.com</strong>
               </a>
             </li>
-            {/* <li className="flex items-center max-lg:justify-center">
+            <li className="flex items-center max-lg:justify-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="16px"
@@ -84,26 +88,52 @@ const ContactUs: React.FC = () => {
               </a>
             </li>
             <li className="flex items-center max-lg:justify-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16px"
-                height="16px"
-                fill="#fff"
-                viewBox="0 0 368.16 368.16"
+              <a
+                href="https://www.facebook.com/your-page-url"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white text-sm ml-3"
               >
-                <path
-                  d="M184.08 0c-74.992 0-136 61.008-136 136 0 24.688 11.072 51.24 11.536 52.36 3.576 8.488 10.632 21.672 15.72 29.4l93.248 141.288c3.816 5.792 9.464 9.112 15.496 9.112s11.68-3.32 15.496-9.104l93.256-141.296c5.096-7.728 12.144-20.912 15.72-29.4.464-1.112 11.528-27.664 11.528-52.36 0-74.992-61.008-136-136-136zM293.8 182.152c-3.192 7.608-9.76 19.872-14.328 26.8l-93.256 141.296c-1.84 2.792-2.424 2.792-4.264 0L88.696 208.952c-4.568-6.928-11.136-19.2-14.328-26.808-.136-.328-10.288-24.768-10.288-46.144 0-66.168 53.832-120 120-120s120 53.832 120 120c0 21.408-10.176 45.912-10.28 46.152z"
-                  data-original="#000000"
-                />
-                <path
-                  d="M184.08 64.008c-39.704 0-72 32.304-72 72s32.296 72 72 72 72-32.304 72-72-32.296-72-72-72zm0 128c-30.872 0-56-25.12-56-56s25.128-56 56-56 56 25.12 56 56-25.128 56-56 56z"
-                  data-original="#000000"
-                />
-              </svg>
-              <a href="javascript:void(0)" className="text-white text-sm ml-3">
-                <strong>123 Street 256 House</strong>
+                {/* Facebook logo SVG */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="32"
+                  height="32"
+                  viewBox="0 0 32 32"
+                >
+                  <path
+                    fill="#fff"
+                    d="M29 0H3C1.346 0 0 1.346 0 3v26c0 1.654 1.346 3 3 3h13V20h-4v-5h4v-4c0-4.418 3.582-8 8-8 1.191 0 2.352.228 3.389.667V8h-3c-1.654 0-3 1.346-3 3v4h5l-1 5h-4v12h7c1.654 0 3-1.346 3-3V3c0-1.654-1.346-3-3-3z"
+                  />
+                </svg>
               </a>
-            </li> */}
+            </li>
+            <li className="flex items-center max-lg:justify-center">
+              <a
+                href="https://www.instagram.com/your-page-url"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white text-sm ml-3"
+              >
+                {/* Instagram logo SVG */}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="32"
+                  height="32"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="feather feather-instagram"
+                >
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                  <path d="M16 11.37a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"></path>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                </svg>
+              </a>
+            </li>
           </ul>
           {/* <ul className="flex max-lg:justify-center mt-16 space-x-4">
             <li className="bg-gray-800 hover:bg-gray-900 h-10 w-10 rounded-full flex items-center justify-center shrink-0">

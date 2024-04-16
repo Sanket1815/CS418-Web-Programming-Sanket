@@ -23,3 +23,9 @@ export class DeleteRecordParams {
   @Field(() => String)
   email!: string;
 }
+
+@InputType()
+export class VerifyRecapchaParams {
+  @Field(() => String)
+  token!: string;
+}

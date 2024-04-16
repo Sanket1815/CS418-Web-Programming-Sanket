@@ -5,6 +5,7 @@ import { gql, useQuery, useMutation } from "@apollo/client";
 import { GET_ADMIN_REQUESTS } from "../graphql/queries";
 import { APPROVE_REQUEST } from "../graphql/mutations";
 import Header from "./header";
+import Head from "next/head";
 
 const AdminPage = () => {
   // Fetching email requests
@@ -22,6 +23,9 @@ const AdminPage = () => {
 
   return (
     <div className="min-h-screen bg-cyan-500 p-4">
+      <Head>
+        <link rel="icon" href="/assests/images/odufavicon-new.ico" />
+      </Head>
       <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
       <div className="overflow-x-auto bg-grey-500">
         <table className="min-w-full bg-white">

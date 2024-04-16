@@ -4,6 +4,7 @@ import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import { VERIFYOTP } from "../graphql/mutations";
 import Header from "./header";
+import Head from "next/head";
 
 const VerifyCode = () => {
   const [otp, setCode] = useState<number>();
@@ -33,6 +34,9 @@ const VerifyCode = () => {
 
   return (
     <div className="flex items-center justify-center h-screen bg-indigo-400">
+      <Head>
+        <link rel="icon" href="/assests/images/odufavicon-new.ico" />
+      </Head>
       <div className="w-full max-w-sm p-6 bg-white rounded-lg shadow-md">
         <h2 className="mb-6 text-xl font-bold text-center text-gray-700">
           Enter Verification Code

@@ -39,14 +39,20 @@ export async function createUser(data: UserAddParams): Promise<String> {
     response = 'Email already exists';
     throw new Error('Email already exists');
   }
-  //const salt = await bcrypt.genSalt();
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  if (!passwordRegex.test(data.password)) {
+    response =
+      'Password must contain at least one uppercase letter, one lowercase letter, one number, one special character and be at least 8 characters long';
+    throw new Error('Invalid password format');
+  }
   const hashPassword = await bcrypt.hash(data.password, 10);
   const verifyEmail = Object.values(EmailDomain);
   if (
     !verifyEmail.some((verifiedEmail) => data.email.includes(verifiedEmail))
   ) {
-    //console.log(verifyEmail);
     response = 'Please enter a vaild email address';
+    //throw new Error('Please enter a valid email address');
   } else {
     users.name = data.name;
     users.email = data.email;
@@ -193,7 +199,7 @@ export async function updateUser(data: UserUpdateParams): Promise<boolean> {
 export async function login(input: LoginParams): Promise<LoginResponse> {
   let response: LoginResponse;
   const em = await getEntityManager();
-  console.log(input.email);
+  // console.log(input.email);
   const user: User = await em
     .getRepository(User)
     .findOne({ email: input.email });

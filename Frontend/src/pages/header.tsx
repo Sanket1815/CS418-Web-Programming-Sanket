@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import Head from "next/head";
 const Header: React.FC = () => {
   const router = useRouter();
   const goToHomePage = () => {
@@ -9,6 +10,9 @@ const Header: React.FC = () => {
   };
   return (
     <nav className="bg-gray-800">
+      <Head>
+        <link rel="icon" href="/assests/images/odufavicon-new.ico" />
+      </Head>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">

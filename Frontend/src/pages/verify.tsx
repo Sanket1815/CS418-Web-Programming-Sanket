@@ -1,42 +1,55 @@
 import { useMutation } from "@apollo/client";
-import { useState } from "react";
-import { VERIFY_TOKEN } from "../graphql/mutations";
+import { useState, useCallback } from "react";
+import { VERIFY_TOKEN, VERIFY_RECAPTCHA } from "../graphql/mutations";
 import { useRouter } from "next/router";
-//const jwt_decode = require("jwt-decode");
-//import * as jwtDecode from "jwt-decode";
 import { jwtDecode } from "jwt-decode";
+import ReCAPTCHA from "react-google-recaptcha";
 import Header from "./header";
-import * as dotenv from "dotenv";
-dotenv.config();
+import Head from "next/head";
 
 export interface TokenPayload {
   email: string;
   password: string;
-} // Adjust the import path as needed
+}
 
 const VerifyPage = () => {
   const [token, setToken] = useState("");
   const [verifyToken, { data, loading, error }] = useMutation(VERIFY_TOKEN);
+  const [verifyReCaptcha] = useMutation(VERIFY_RECAPTCHA);
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
   const router = useRouter();
-  //console.log("email", router.query.email);
+
+  const handleReCaptchaVerify = useCallback((recaptchaToken: string | null) => {
+    setRecaptchaToken(recaptchaToken);
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     try {
       await verifyToken({ variables: { input: { token } } });
       const gettoken = localStorage.getItem("jwtToken");
-      // console.log("token", gettoken);
       const decoded = jwtDecode<TokenPayload>(gettoken!);
-      // console.log("email", decoded.email);
-      router.push({
-        pathname: "/home",
-        query: { email: decoded.email },
+
+      if (!recaptchaToken) {
+        console.log("reCAPTCHA token is missing.");
+        return;
+      }
+
+      const response = await verifyReCaptcha({
+        variables: { input: { token: recaptchaToken } },
       });
-      // console.log("data", data);
-      // Handle success (e.g., show a success message, redirect, etc.)
-      console.log("Verification successful!"); // Replace with appropriate actions
+      if (response.data.verifyReCapacha) {
+        router.push({
+          pathname: "/home",
+          query: { email: decoded.email },
+        });
+        console.log("Verification successful!");
+      } else {
+        console.log("reCAPTCHA verification failed.");
+      }
     } catch (err) {
-      // Handle error (e.g., show an error message)
-      console.error("Verification failed:", err); // Replace with appropriate actions
+      console.error("Verification failed:", err);
     }
   };
 
@@ -45,6 +58,9 @@ const VerifyPage = () => {
       className="flex items-center justify-center h-screen bg-cover"
       style={{ backgroundImage: "url('/assests/images/verifypage.png')" }}
     >
+      <Head>
+        <link rel="icon" href="/assests/images/odufavicon-new.ico" />
+      </Head>
       <div className="w-full max-w-xs">
         <form
           onSubmit={handleSubmit}
@@ -66,6 +82,12 @@ const VerifyPage = () => {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
+          <ReCAPTCHA
+            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
+            onChange={handleReCaptchaVerify}
+            size="normal"
+            badge="bottomright"
+          />
           <div className="flex items-center justify-between">
             <button
               type="submit"
@@ -94,5 +116,3 @@ const PageComponent: React.FC = () => {
 };
 
 export default PageComponent;
-
-//export default VerifyPage;

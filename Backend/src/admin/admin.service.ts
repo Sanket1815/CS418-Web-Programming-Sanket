@@ -5,31 +5,10 @@ import { EntityRepository, EntityManager, MikroORM } from '@mikro-orm/core';
 import {
   AdminParams,
   AdminApproveParams,
-  DeleteRecordParams,
+  VerifyRecapchaParams,
 } from './admin.params';
 import { getEntityManager } from '../app.controller';
-
-// let entityManager = null;
-// export const getEntityManager = async () => {
-//   if (!entityManager) {
-//     const orm = await MikroORM.init({
-//       entities: [Admin],
-//       dbName: 'nestjsreact',
-//       type: 'mysql',
-//       // ...other Mikro-ORM options
-//     });
-
-//     entityManager = orm.em;
-//   }
-
-//   return entityManager;
-// };
-// @Injectable()
-// export class AdminService {
-// constructor(
-//   @InjectRepository(Admin)
-//   private em: EntityManager,
-// ) {}
+import axios from 'axios';
 
 export async function createAdminRequest(data: AdminParams): Promise<Boolean> {
   const em = await getEntityManager();
@@ -76,15 +55,31 @@ export async function adminapproval(
     updateAdmin.loginAttempt = students.loginAttempt + 1;
     await em.persistAndFlush(updateAdmin);
   }
-  //console.log(data.approve);
-  //updateAdmin.loginAttempt = data.loginAttempt++;
-  // console.log(`1 ${updateAdmin.approve}`);
-
-  // await em.persistAndFlush(updateAdmin);
 
   return !!updateAdmin;
 }
 //}
+
+export async function verifyCapatcha(
+  data: VerifyRecapchaParams,
+): Promise<boolean> {
+  //const url = `${process.env.GOOGLE_CAPTCHA_SITE}?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${data.token}`;
+
+  const response = await axios.post(
+    `${process.env.GOOGLE_CAPATCHA_SITE}?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${data.token}`,
+    {},
+    {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    },
+  );
+  if (!response.data.success) {
+    return false;
+  }
+  //console.log(`res${JSON.stringify(response?.data?.)}`);
+  return true;
+}
 
 @Injectable()
 export class AdminService {

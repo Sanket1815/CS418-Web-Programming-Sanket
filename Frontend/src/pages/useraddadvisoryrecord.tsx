@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_COURSES, GETSINGLEUSER } from "../graphql/queries";
 import { ADD_ADVISORY_RECORD } from "../graphql/mutations";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 const Header: React.FC = () => {
   const router = useRouter();
@@ -23,6 +24,9 @@ const Header: React.FC = () => {
 
   return (
     <nav className="bg-gray-800 z-10 relative">
+      <Head>
+        <link rel="icon" href="/assests/images/odufavicon-new.ico" />
+      </Head>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
@@ -69,6 +73,8 @@ const AdvisoryForm = () => {
     variables: { input: { email: router.query.email } },
   });
   const [popupMessage, setPopupMessage] = useState("");
+  const [showFeedbackPrompt, setShowFeedbackPrompt] = useState(false);
+  const [showFeedbackForm, setShowFeedbackForm] = useState(false);
   const [createAdvisoryRecord] = useMutation(ADD_ADVISORY_RECORD);
   const [advisoryInput, setAdvisoryInput] = useState({
     id: userData.getSingleUser.id,
@@ -89,6 +95,42 @@ const AdvisoryForm = () => {
       },
     ],
   });
+
+  // useEffect(() => {
+  //   const iframe = document.querySelector("iframe") as HTMLIFrameElement;
+
+  //   if (iframe) {
+  //     iframe.onload = () => {
+  //       const doc = iframe.contentDocument || iframe.contentWindow?.document;
+  //       if (doc) {
+  //         const observer = new MutationObserver((mutations) => {
+  //           mutations.forEach((mutation) => {
+  //             if (
+  //               mutation.addedNodes.length > 0 &&
+  //               mutation.addedNodes[0].nodeType === Node.ELEMENT_NODE
+  //             ) {
+  //               const element = mutation.addedNodes[0] as HTMLElement;
+  //               if (element.textContent?.includes("Thank you")) {
+  //                 router.push({
+  //                   pathname: "/userRecord",
+  //                   query: { email: userData.getSingleUser.email },
+  //                 });
+  //               }
+  //             }
+  //           });
+  //         });
+  //         observer.observe(doc.body, { childList: true, subtree: true });
+  //         return () => observer.disconnect();
+  //       }
+  //     };
+  //   }
+  // }, []);
+
+  // const handleGoToForm = () => {
+  //   window.open(
+  //     "https://docs.google.com/forms/d/e/1FAIpQLSfCuhwoj1Jy-RKCtoRlLk0Me1gvu7Ad0gSaeeABeDHKZsCS4A/viewform?usp=sf_link"
+  //   );
+  // };
 
   //   const handleInputChange = (e: any, index: any, field: any) => {
   //     const { value } = e.target;
@@ -199,22 +241,22 @@ const AdvisoryForm = () => {
       } else {
         setPopupMessage(response.data.createUserAdvisoryRecord);
       }
-      // else if (
-      //   response.data.createUserAdvisoryRecord == "No unique courses to add"
-      // ) {
-      //   setPopupMessage("You have already taken one of the course");
-      // } else if (
-      //   response.data.createUserAdvisoryRecord.contains(
-      //     "Record inserted successfully. Note: Duplicate courses not added"
-      //   )
-      // ) {
-      //   setPopupMessage("One of the course is already taken by you");
-      // }
-      console.log(response.data.createUserAdvisoryRecord);
-      // Handle success (e.g., clear form, show message)
     } catch (error) {
       console.error("Error creating advisory record:", error);
       // Handle error (e.g., show error message)
+    }
+  };
+
+  const handleFeedbackResponse = (acceptFeedback: any) => {
+    console.log("Feedback response:", acceptFeedback);
+    setShowFeedbackPrompt(false);
+    if (acceptFeedback) {
+      setShowFeedbackForm(true);
+    } else {
+      router.push({
+        pathname: "/userRecord",
+        query: { email: userData.getSingleUser.email },
+      });
     }
   };
 
@@ -235,22 +277,6 @@ const AdvisoryForm = () => {
     });
   };
 
-  // const LevelDropdown = ({ index, value, handleChange }: any) => (
-  //   <select
-  //     name={`courses[${index}].level`}
-  //     id={`courses-level-${index}`}
-  //     value={value}
-  //     onChange={handleChange}
-  //     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-  //   >
-  //     <option value="">Select Level</option>
-  //     {courseData.getCourses.map((course: any) => (
-  //       <option key={course.id} value={course.level}>
-  //         {course.level}
-  //       </option>
-  //     ))}
-  //   </select>
-  // );
   const LevelDropdown = ({ index, value, handleChange }: any) => (
     <select
       name={`courses[${index}].level`}
@@ -277,15 +303,6 @@ const AdvisoryForm = () => {
       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
     >
       <option value="">Select Course</option>
-      {/* {courseData.getCourses
-          .filter(
-            (course: any) => course.level >= level && course.level < level + 99
-          )
-          .map((course: any) => (
-            <option key={course.id} value={course.courseName}>
-              {course.courseName}
-            </option>
-          ))} */}
       {getFilteredCourses(level).map((course: any) => (
         <option key={course.id} value={course.courseName}>
           {course.courseName}
@@ -294,50 +311,22 @@ const AdvisoryForm = () => {
     </select>
   );
 
-  // Dropdown for CourseName
-  // const CourseNameDropdown = ({ index, value, handleChange }: any) => (
-  //   <select
-  //     name={`courses[${index}].courseName`}
-  //     id={`courses-courseName-${index}`}
-  //     value={value}
-  //     onChange={handleChange}
-  //     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-  //   >
-  //     <option value="">Select Course</option>
-  //     {courseData.getCourses.map((course: any) => (
-  //       <option key={course.id} value={course.courseName}>
-  //         {course.courseName}
-  //       </option>
-  //     ))}
-  //   </select>
-  // );
-
-  // const PrerequisitesNameDropdown = ({ index, value, handleChange }: any) => (
-  //   <select
-  //     name={`prerequisites[${index}].courseName`}
-  //     id={`prerequisites-courseName-${index}`}
-  //     value={value}
-  //     onChange={handleChange}
-  //     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-  //   >
-  //     <option value="">Select Course</option>
-  //     {courseData.getCourses
-  //       .reduce((acc: any[], course: any) => {
-  //         course.prerequisites.forEach((prerequisite: any) => {
-  //           acc.push({
-  //             id: prerequisite.id,
-  //             courseName: prerequisite.prerequisites,
-  //           });
-  //         });
-  //         return acc;
-  //       }, [])
-  //       .map((prerequisite: any) => (
-  //         <option key={prerequisite.id} value={prerequisite.courseName}>
-  //           {prerequisite.courseName}
-  //         </option>
-  //       ))}
-  //   </select>
-  // );
+  // const Modal = ({ children, onClose }: any) => {
+  //   return (
+  //     <div className="fixed inset-0 bg-gray-600 bg-opacity-75 overflow-y-auto h-full w-full flex justify-center items-center z-50">
+  //       <div className="relative bg-white p-5 rounded-lg shadow-lg max-w-4xl w-full mx-4 my-8">
+  //         {children}
+  //         <button
+  //           className="absolute top-0 right-0 m-2 text-gray-500 hover:text-gray-800"
+  //           onClick={onClose}
+  //         >
+  //           <span className="text-2xl">&times;</span>{" "}
+  //           {/* Unicode for 'x' character */}
+  //         </button>
+  //       </div>
+  //     </div>
+  //   );
+  // };
 
   const PrerequisitesNameDropdown = ({
     index,

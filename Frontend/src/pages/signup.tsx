@@ -2,7 +2,8 @@
 import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
-import { SIGNUP_MUTATION } from "../graphql/mutations"; // Import your GraphQL mutation
+import { SIGNUP_MUTATION } from "../graphql/mutations";
+import Head from "next/head";
 
 interface SignUpData {
   name: string;
@@ -63,7 +64,6 @@ const Signup = () => {
   });
   const [signup, { data, loading, error }] = useMutation(SIGNUP_MUTATION);
   const [popupMessage, setPopupMessage] = useState("");
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -71,6 +71,8 @@ const Signup = () => {
   const handleSignInRedirect = () => {
     router.push("/login");
   };
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,6 +83,10 @@ const Signup = () => {
         setPopupMessage("Email should not be empty");
       } else if (formData.password == "" || formData.password == null) {
         setPopupMessage("Password should not be empty");
+      } else if (!passwordRegex.test(formData.password)) {
+        setPopupMessage(
+          "Password must contain at least one uppercase letter, one lowercase letter, one number, one special character, and be at least 8 characters long."
+        );
       } else {
         // console.log("--------------");
         const result = await signup({ variables: { input: formData } });
@@ -107,6 +113,9 @@ const Signup = () => {
       className="flex justify-center items-center h-screen bg-cover"
       // style={{ backgroundImage: "url('/assests/images/signup1.jpg')" }}
     >
+      <Head>
+        <link rel="icon" href="/assests/images/odufavicon-new.ico" />
+      </Head>
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"

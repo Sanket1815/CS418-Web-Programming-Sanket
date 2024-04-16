@@ -4,12 +4,13 @@ import {
   createAdminRequest,
   getAdminRequests,
   deleteAdminRecord,
+  verifyCapatcha,
 } from './admin.service';
 import { StudentType } from './admin.type';
 import {
   AdminApproveParams,
   AdminParams,
-  DeleteRecordParams,
+  VerifyRecapchaParams,
 } from './admin.params';
 import { Admin } from './admin.entity';
 import { EntityManager } from '@mikro-orm/core';
@@ -38,10 +39,16 @@ export class AdminResolver {
     return adminapproval(input);
   }
 
-  // @Mutation(() => Boolean)
-  // async DeleteUserRecord(
-  //   @Args('input') input: DeleteRecordParams,
-  // ): Promise<Boolean> {
-  //   return deleteAdminRecord(input);
-  // }
+  @Mutation(() => Boolean)
+  async verifyReCapacha(
+    @Args('input') input: VerifyRecapchaParams,
+    // other arguments
+  ): Promise<boolean> {
+    const isCaptchaValid = await verifyCapatcha(input);
+    console.log(`cap ${isCaptchaValid}`);
+    if (!isCaptchaValid) {
+      throw new Error('Invalid CAPTCHA.');
+    }
+    return isCaptchaValid;
+  }
 }

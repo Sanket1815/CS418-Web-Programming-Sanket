@@ -5,6 +5,7 @@ import { GETSINGLEUSER } from "../graphql/queries";
 import { UPDATEUSER_MUTATION } from "../graphql/mutations";
 import { useRouter } from "next/router";
 import Header from "./header";
+import Head from "next/head";
 
 const Profile = () => {
   const router = useRouter();
@@ -93,6 +94,9 @@ const Profile = () => {
 
   return (
     <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+      <Head>
+        <link rel="icon" href="/assests/images/odufavicon-new.ico" />
+      </Head>
       {/* {isAdmin && (
         <div className="fixed top-0 left-0 right-0 z-50 flex justify-end p-4">
           <button

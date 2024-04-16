@@ -4,6 +4,7 @@ import { useState } from "react";
 import { GET_USERS } from "../graphql/queries";
 import { UPDATE_ADVISORY_RECORD } from "../graphql/mutations";
 import ViewAdvisoryRecordsPage from "./adminStudentRecord";
+import Head from "next/head";
 
 const Header: React.FC = () => {
   const router = useRouter();
@@ -101,6 +102,9 @@ const StudentsTable = () => {
 
   return (
     <div className="overflow-x-auto">
+      <Head>
+        <link rel="icon" href="/assests/images/odufavicon-new.ico" />
+      </Head>
       <table className="table-auto w-full text-left whitespace-no-wrap">
         <thead>
           <tr className="text-xs font-semibold tracking-wide text-gray-700 uppercase border-b bg-gray-50">

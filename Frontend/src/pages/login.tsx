@@ -4,6 +4,7 @@ import { useMutation } from "@apollo/client";
 import { LOGIN_MUTATION } from "../graphql/mutations";
 import { useRouter } from "next/router";
 import { jwtDecode } from "jwt-decode";
+import Head from "next/head";
 
 export interface TokenPayload {
   email: string;
@@ -132,6 +133,9 @@ const Login = () => {
       className="flex justify-center items-center h-screen bg-cover"
       //style={{ backgroundImage: "url('/assests/images/login1.jpg')" }}
     >
+      <Head>
+        <link rel="icon" href="/assests/images/odufavicon-new.ico" />
+      </Head>
       <form
         onSubmit={handleSubmit}
         className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"

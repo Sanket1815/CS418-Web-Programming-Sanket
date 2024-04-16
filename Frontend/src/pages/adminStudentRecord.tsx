@@ -2,6 +2,7 @@ import { useQuery, gql } from "@apollo/client";
 import { useRouter } from "next/router";
 import React from "react";
 import { GETSINGLEUSER } from "../graphql/queries";
+import Head from "next/head";
 
 const ViewAdvisoryRecordsPage: React.FC = () => {
   const router = useRouter();
@@ -47,6 +48,9 @@ const ViewAdvisoryRecordsPage: React.FC = () => {
 
   return (
     <div>
+      <Head>
+        <link rel="icon" href="/assests/images/odufavicon-new.ico" />
+      </Head>
       <nav className="bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
